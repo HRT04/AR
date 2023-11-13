@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WebAR Image Capture</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #ar-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #video-element {
+      width: 100%;
+      height: 100%;
+    }
+
+    #capture-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="ar-container">
+    <video id="video-element" autoplay playsinline></video>
+  </div>
+  <button id="capture-button">Capture Image</button>
+  <canvas id="image-overlay"></canvas>
+  <img id="processed-image">
+ 
+  <script>
+    const container = document.getElementById("ar-container");
+    const videoElement = document.getElementById("video-element");
+    const captureButton = document.getElementById("capture-button");
+    const processedImage = document.getElementById("processed-image");
+    const imageOverlay = document.getElementById("image-overlay");
+
+
+    // カメラの映像取得
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then((stream) => {
+      videoElement.srcObject = stream;
+      videoElement.play()
+      .then(() => {
+        // 映像の再生が開始された後に showCaptureArea() を呼び出す
+        videoElement.addEventListener('loadedmetadata', showCaptureArea);
+    })
+    .catch((error) => {
+      console.error("Video play error: ", error);
+    });
+  })
+  .catch((error) => {
+    console.error("getUserMedia error: ", error);
+  });
+
+    // videoElementの幅と高さを取得
+    const videoWidth = videoElement.videoWidth;
+    const videoHeight = videoElement.videoHeight;
+      
+    // キャプチャした画像の領域を指定
+    const objectWidth = 250;
+    const objectHeight = 250;
+
+    // 切り取る領域の左上座標を計算
+    const startX = (videoWidth - objectWidth) / 2;
+    const startY = (videoHeight - objectHeight) / 2;
+
+    //枠線表示関数
+    function showCaptureArea() {
+      // キャンバスを作成
+      const ctx1 = imageOverlay.getContext("2d");
+  
+      // キャンバスのサイズを設定
+      imageOverlay.width = videoWidth;
+      imageOverlay.height = videoHeight;
+
+      // 枠線を描画
+      ctx1.strokeStyle = "#FF0000"; // 赤色
+      ctx1.beginPath();
+      ctx1.strokeRect(startX, startY, objectWidth, objectHeight);
+    }
+
+    
+
+    // キャプチャボタンのクリックイベント
+    captureButton.addEventListener("click", () => {
+      // キャンバスを作成し、映像を描画
+      const canvas = document.createElement("canvas");
+      canvas.width = objectWidth; // 切り取る領域の幅
+      canvas.height = objectHeight; // 切り取る領域の高さ
+      const ctx2 = canvas.getContext("2d");
+      
+      // キャプチャした画像をクロップして描画
+      ctx2.drawImage(videoElement, startX, startY, objectWidth, objectHeight, 0, 0, objectWidth, objectHeight);
+
+
+
+      // クロップした画像を保存
+      const capturedImage = canvas.toDataURL("image/jpeg");
+
+      // 画像を表示
+      //processedImage.src = capturedImage;
+      //processedImage.style.display = "block"; 
+
+      // 画像を保存する場合（例：ダウンロード）
+      //const downloadLink = document.createElement("a");
+      //downloadLink.href = capturedImage;
+      //downloadLink.download = "captured_image.jpg";
+      //downloadLink.click();
+    });
+  </script>
+</body>
+</html>
+

@@ -17,11 +17,13 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      z-index: -1;
     }
 
     #video-element {
       width: 100%;
       height: 100%;
+      z-index: -1;
     }
 
     #capture-button {
@@ -31,9 +33,10 @@
       transform: translateX(-50%);
       padding: 10px;
       background-color: #3498db;
-      color: #fff;
+      color: black;
       border: none;
       cursor: pointer;
+      z-index: 1;
     }
   </style>
 </head>
@@ -41,7 +44,7 @@
   <div id="ar-container">
     <video id="video-element" autoplay playsinline></video>
   </div>
-  <button id="capture-button">Capture Image</button>
+  <button id="capture-button">BUTTON</button>
   <canvas id="image-overlay"></canvas>
   <img id="processed-image">
  
@@ -52,55 +55,67 @@
     const processedImage = document.getElementById("processed-image");
     const imageOverlay = document.getElementById("image-overlay");
 
-
-    // カメラの映像取得
-  navigator.mediaDevices.getUserMedia({ video: true })
+  // カメラの映像取得
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
     .then((stream) => {
+      //console.log('navi loaded.');
       videoElement.srcObject = stream;
-      videoElement.play()
-      .then(() => {
-        // 映像の再生が開始された後に showCaptureArea() を呼び出す
-        videoElement.addEventListener('loadedmetadata', showCaptureArea);
+      videoElement.play();
+    })
+    .then(() => {
+      // 映像の再生が開始された後に showCaptureArea() を呼び出す
+      videoElement.addEventListener('loadedmetadata', () => {
+        //console.log('Data loaded.');
+        // videoElementの幅と高さを取得
+        const videoWidth = videoElement.videoWidth;
+        const videoHeight = videoElement.videoHeight;
+          
+        // キャプチャした画像の領域を指定
+        const objectWidth = 250;
+        const objectHeight = 250;
+
+        // 切り取る領域の左上座標を計算
+        const startX = (videoWidth - objectWidth) / 2;
+        const startY = (videoHeight - objectHeight) / 2;
+        showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
+      });
     })
     .catch((error) => {
-      console.error("Video play error: ", error);
-    });
-  })
-  .catch((error) => {
-    console.error("getUserMedia error: ", error);
+      //console.error("Video play error: ", error);
   });
-
-    // videoElementの幅と高さを取得
-    const videoWidth = videoElement.videoWidth;
-    const videoHeight = videoElement.videoHeight;
-      
-    // キャプチャした画像の領域を指定
-    const objectWidth = 250;
-    const objectHeight = 250;
-
-    // 切り取る領域の左上座標を計算
-    const startX = (videoWidth - objectWidth) / 2;
-    const startY = (videoHeight - objectHeight) / 2;
-
+    
     //枠線表示関数
-    function showCaptureArea() {
+    function showCaptureArea(vdW,vdH, ojW, ojH, stX, stY) {
+
       // キャンバスを作成
       const ctx1 = imageOverlay.getContext("2d");
   
       // キャンバスのサイズを設定
-      imageOverlay.width = videoWidth;
-      imageOverlay.height = videoHeight;
+      imageOverlay.width = vdW;
+      imageOverlay.height = vdH;
 
       // 枠線を描画
       ctx1.strokeStyle = "#FF0000"; // 赤色
       ctx1.beginPath();
-      ctx1.strokeRect(startX, startY, objectWidth, objectHeight);
+      ctx1.strokeRect(stX, stY, ojW, ojH);
     }
 
     
 
     // キャプチャボタンのクリックイベント
     captureButton.addEventListener("click", () => {
+      //console.log('Capture button clicked.');
+      const videoWidth = videoElement.videoWidth;
+      const videoHeight = videoElement.videoHeight;
+        
+      // キャプチャした画像の領域を指定
+      const objectWidth = 250;
+      const objectHeight = 250;
+
+      // 切り取る領域の左上座標を計算
+      const startX = (videoWidth - objectWidth) / 2;
+      const startY = (videoHeight - objectHeight) / 2;
+
       // キャンバスを作成し、映像を描画
       const canvas = document.createElement("canvas");
       canvas.width = objectWidth; // 切り取る領域の幅
@@ -116,8 +131,8 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
 
       // 画像を表示
-      //processedImage.src = capturedImage;
-      //processedImage.style.display = "block"; 
+      processedImage.src = capturedImage;
+      processedImage.style.display = "block"; 
 
       // 画像を保存する場合（例：ダウンロード）
       //const downloadLink = document.createElement("a");

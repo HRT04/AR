@@ -17,7 +17,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      z-index: -1;
+      z-index: -2;
     }
 
     #video-element {
@@ -38,7 +38,18 @@
       cursor: pointer;
       z-index: 1;
     }
-    
+
+    #processed-image {
+      position: fixed;
+      bottom: 0;
+      left: 10%;
+      transform: translateX(-50%);
+      width: 100px; /* 画像の幅 */
+      height: 100px; /* 画像の高さ */
+      object-fit: cover; /* 画像を保ちつつ親要素に合わせる */
+      z-index: 2; /* 1番上のレイヤー */
+      display: none; /* 最初は非表示にしておく */
+    }
   </style>
 </head>
 <body>
@@ -52,34 +63,38 @@
   <script>
     const container = document.getElementById("ar-container");
     const videoElement = document.getElementById("video-element");
-    const fullScreenElement = document.documentElement;
     const captureButton = document.getElementById("capture-button");
     const processedImage = document.getElementById("processed-image");
     const imageOverlay = document.getElementById("image-overlay");
 
   // カメラの映像取得
-  navigator.mediaDevices.getUserMedia({ video:true})
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
     .then((stream) => {
       //console.log('navi loaded.');
       videoElement.srcObject = stream;
       videoElement.play();
-      const videoWidth = window.innerWidth;
-      const videoHeight = window.innerHeight;
-      console.log({videoHeight, videoWidth})
-      // キャプチャした画像の領域を指定
-      const objectWidth = 250;
-      const objectHeight = 250;
+    })
+    .then(() => {
+      // 映像の再生が開始された後に showCaptureArea() を呼び出す
+      videoElement.addEventListener('loadedmetadata', () => {
+        //console.log('Data loaded.');
+        //videoElementの幅と高さを取得
+        const videoWidth = window.innerWidth;
+        const videoHeight = window.innerHeight;
+          
+        // キャプチャした画像の領域を指定
+        const objectWidth = 250;
+        const objectHeight = 250;
 
-      // 切り取る領域の左上座標を計算
-      const startX = (videoWidth - objectWidth) / 2;
-      const startY = (videoHeight - objectHeight) / 2;
-      console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY});
-      showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
+        // 切り取る領域の左上座標を計算
+        const startX = (videoWidth - objectWidth) / 2;
+        const startY = (videoHeight - objectHeight) / 2;
+        showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
+      });
     })
     .catch((error) => {
-      console.error("Video play error: ", error);
-      }
-  );
+      //console.error("Video play error: ", error);
+  });
     
     //枠線表示関数
     function showCaptureArea(vdW,vdH, ojW, ojH, stX, stY) {
@@ -104,7 +119,7 @@
       //console.log('Capture button clicked.');
       const videoWidth = window.innerWidth;
       const videoHeight = window.innerHeight;
-      console.log({videoHeight, videoWidth})
+        
       // キャプチャした画像の領域を指定
       const objectWidth = 250;
       const objectHeight = 250;
@@ -112,24 +127,26 @@
       // 切り取る領域の左上座標を計算
       const startX = (videoWidth - objectWidth) / 2;
       const startY = (videoHeight - objectHeight) / 2;
+
       // キャンバスを作成し、映像を描画
       const canvas = document.createElement("canvas");
       canvas.width = objectWidth; // 切り取る領域の幅
       canvas.height = objectHeight; // 切り取る領域の高さ
       const ctx2 = canvas.getContext("2d");
+      
       // キャプチャした画像をクロップして描画
-      console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY});
       ctx2.drawImage(videoElement, startX, startY, objectWidth, objectHeight, 0, 0, objectWidth, objectHeight);
 
 
 
+      // クロップした画像を保存
       const capturedImage = canvas.toDataURL("image/jpeg");
 
       // 画像を表示
-      //processedImage.src = capturedImage;
-      //processedImage.style.display = "block"; 
+      processedImage.src = capturedImage;
+      processedImage.style.display = "block"; 
 
-      // 画像を保存
+      // 画像を保存する場合（例：ダウンロード）
       //const downloadLink = document.createElement("a");
       //downloadLink.href = capturedImage;
       //downloadLink.download = "captured_image.jpg";
@@ -138,4 +155,3 @@
   </script>
 </body>
 </html>
-

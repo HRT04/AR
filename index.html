@@ -38,17 +38,6 @@
       cursor: pointer;
       z-index: 1;
     }
-
-    #processed-image {
-      position: fixed;
-      bottom: 0;
-      left: 0%; /* 中央揃えに変更 */
-      transform: translateX(-50%); /* 追加 */
-      width: 100px; /* 画像の幅 */
-      height: 100px; /* 画像の高さ */
-      object-fit: cover; /* 画像を保ちつつ親要素に合わせる */
-      z-index: 2; /* 1番上のレイヤー */
-    }
     
   </style>
 </head>
@@ -69,7 +58,7 @@
     const imageOverlay = document.getElementById("image-overlay");
 
   // カメラの映像取得
-  navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
+  navigator.mediaDevices.getUserMedia({ video:true})
     .then((stream) => {
       //console.log('navi loaded.');
       videoElement.srcObject = stream;
@@ -134,14 +123,13 @@
 
 
 
-      // クロップした画像を保存
       const capturedImage = canvas.toDataURL("image/jpeg");
 
       // 画像を表示
-      processedImage.src = capturedImage;
-      processedImage.style.display = "block"; 
+      //processedImage.src = capturedImage;
+      //processedImage.style.display = "block"; 
 
-      // 画像を保存する場合（例：ダウンロード）
+      // 画像を保存
       //const downloadLink = document.createElement("a");
       //downloadLink.href = capturedImage;
       //downloadLink.download = "captured_image.jpg";

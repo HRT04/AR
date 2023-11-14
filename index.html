@@ -38,6 +38,18 @@
       cursor: pointer;
       z-index: 1;
     }
+
+    #processed-image {
+      position: fixed;
+      bottom: 0;
+      left: 0%; /* 中央揃えに変更 */
+      transform: translateX(-50%); /* 追加 */
+      width: 100px; /* 画像の幅 */
+      height: 100px; /* 画像の高さ */
+      object-fit: cover; /* 画像を保ちつつ親要素に合わせる */
+      z-index: 2; /* 1番上のレイヤー */
+    }
+    
   </style>
 </head>
 <body>
@@ -51,6 +63,7 @@
   <script>
     const container = document.getElementById("ar-container");
     const videoElement = document.getElementById("video-element");
+    const fullScreenElement = document.documentElement;
     const captureButton = document.getElementById("capture-button");
     const processedImage = document.getElementById("processed-image");
     const imageOverlay = document.getElementById("image-overlay");
@@ -61,28 +74,23 @@
       //console.log('navi loaded.');
       videoElement.srcObject = stream;
       videoElement.play();
-    })
-    .then(() => {
-      // 映像の再生が開始された後に showCaptureArea() を呼び出す
-      videoElement.addEventListener('loadedmetadata', () => {
-        //console.log('Data loaded.');
-        // videoElementの幅と高さを取得
-        const videoWidth = videoElement.videoWidth;
-        const videoHeight = videoElement.videoHeight;
-          
-        // キャプチャした画像の領域を指定
-        const objectWidth = 250;
-        const objectHeight = 250;
+      const videoWidth = window.innerWidth;
+      const videoHeight = window.innerHeight;
+      console.log({videoHeight, videoWidth})
+      // キャプチャした画像の領域を指定
+      const objectWidth = 250;
+      const objectHeight = 250;
 
-        // 切り取る領域の左上座標を計算
-        const startX = (videoWidth - objectWidth) / 2;
-        const startY = (videoHeight - objectHeight) / 2;
-        showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
-      });
+      // 切り取る領域の左上座標を計算
+      const startX = (videoWidth - objectWidth) / 2;
+      const startY = (videoHeight - objectHeight) / 2;
+      console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY});
+      showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
     })
     .catch((error) => {
-      //console.error("Video play error: ", error);
-  });
+      console.error("Video play error: ", error);
+      }
+  );
     
     //枠線表示関数
     function showCaptureArea(vdW,vdH, ojW, ojH, stX, stY) {
@@ -105,9 +113,9 @@
     // キャプチャボタンのクリックイベント
     captureButton.addEventListener("click", () => {
       //console.log('Capture button clicked.');
-      const videoWidth = videoElement.videoWidth;
-      const videoHeight = videoElement.videoHeight;
-        
+      const videoWidth = window.innerWidth;
+      const videoHeight = window.innerHeight;
+      console.log({videoHeight, videoWidth})
       // キャプチャした画像の領域を指定
       const objectWidth = 250;
       const objectHeight = 250;
@@ -115,14 +123,13 @@
       // 切り取る領域の左上座標を計算
       const startX = (videoWidth - objectWidth) / 2;
       const startY = (videoHeight - objectHeight) / 2;
-
       // キャンバスを作成し、映像を描画
       const canvas = document.createElement("canvas");
       canvas.width = objectWidth; // 切り取る領域の幅
       canvas.height = objectHeight; // 切り取る領域の高さ
       const ctx2 = canvas.getContext("2d");
-      
       // キャプチャした画像をクロップして描画
+      console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY});
       ctx2.drawImage(videoElement, startX, startY, objectWidth, objectHeight, 0, 0, objectWidth, objectHeight);
 
 

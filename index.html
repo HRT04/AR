@@ -44,11 +44,11 @@
       bottom: 0;
       left: 10%;
       transform: translateX(-50%);
-      width: 100px; /* 画像の幅 */
-      height: 100px; /* 画像の高さ */
-      object-fit: cover; /* 画像を保ちつつ親要素に合わせる */
-      z-index: 2; /* 1番上のレイヤー */
-      display: none; /* 最初は非表示にしておく */
+      width: 100px;
+      height: 100px;
+      object-fit: cover; 
+      z-index: 2; 
+      display: none; 
     }
   </style>
 </head>
@@ -90,6 +90,7 @@
         const startX = (videoWidth - objectWidth) / 2;
         const startY = (videoHeight - objectHeight) / 2;
         showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
+        console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY})
       });
     })
     .catch((error) => {
@@ -127,21 +128,20 @@
       // 切り取る領域の左上座標を計算
       const startX = (videoWidth - objectWidth) / 2;
       const startY = (videoHeight - objectHeight) / 2;
-
       // キャンバスを作成し、映像を描画
       const canvas = document.createElement("canvas");
       canvas.width = objectWidth; // 切り取る領域の幅
       canvas.height = objectHeight; // 切り取る領域の高さ
       const ctx2 = canvas.getContext("2d");
-      
+      ctx2.beginPath();
       // キャプチャした画像をクロップして描画
       ctx2.drawImage(videoElement, startX, startY, objectWidth, objectHeight, 0, 0, objectWidth, objectHeight);
-
+      console.log({videoWidth, videoHeight, objectWidth , objectHeight, startX, startY})
 
 
       // クロップした画像を保存
       const capturedImage = canvas.toDataURL("image/jpeg");
-
+      console.log({capturedImage})
       // 画像を表示
       processedImage.src = capturedImage;
       processedImage.style.display = "block"; 

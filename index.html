@@ -142,9 +142,23 @@
       // クロップした画像を保存
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
-      // 画像を表示
+      
+      // 画像を一旦非表示にする
+      processedImage.style.display = "none"; 
+
+      // 一時的に画像を読み込むために新しい Image オブジェクトを作成し、読み込み後に表示する
+      const tempImage = new Image();
+      tempImage.onload = () => {
+      // 画像読み込み後の処理
       processedImage.src = capturedImage;
       processedImage.style.display = "block"; 
+      };
+      tempImage.src = capturedImage;
+      
+      
+      // 画像を表示
+      //processedImage.src = capturedImage;
+      //processedImage.style.display = "block"; 
 
       // 画像を保存する場合（例：ダウンロード）
       //const downloadLink = document.createElement("a");

@@ -66,6 +66,7 @@
     const captureButton = document.getElementById("capture-button");
     const processedImage = document.getElementById("processed-image");
     const imageOverlay = document.getElementById("image-overlay");
+    let videoWidth, videoHeight;
 
   // カメラの映像取得
   navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
@@ -79,8 +80,8 @@
       videoElement.addEventListener('loadedmetadata', () => {
         //console.log('Data loaded.');
         //videoElementの幅と高さを取得
-        const videoWidth = videoElement.clientWidth;
-        const videoHeight = videoElement.clientHeight;
+        videoWidth = videoElement.clientWidth;
+        videoHeight = videoElement.clientHeight;
 
           
         // キャプチャした画像の領域を指定
@@ -145,7 +146,7 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
       
-      console.log("commit_11")
+      console.log("commit_12")
       processedImage.src = capturedImage;
       processedImage.style.display = "block"; 
       

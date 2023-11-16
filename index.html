@@ -119,8 +119,8 @@
     // キャプチャボタンのクリックイベント
     captureButton.addEventListener("click", () => {
       //console.log('Capture button clicked.');
-      const videoWidth = videoElement.clientWidth;
-      const videoHeight = videoElement.clientHeight;
+      const videoWidth = videoElement.videoWidth;
+      const videoHeight = videoElement.videoHeight;
 
         
       // キャプチャした画像の領域を指定
@@ -145,7 +145,7 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
       
-      console.log("commit_10")
+      console.log("commit_11")
       processedImage.src = capturedImage;
       processedImage.style.display = "block"; 
       

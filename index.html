@@ -66,7 +66,6 @@
     const captureButton = document.getElementById("capture-button");
     const processedImage = document.getElementById("processed-image");
     const imageOverlay = document.getElementById("image-overlay");
-    let videoWidth, videoHeight;
 
   // カメラの映像取得
   navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
@@ -80,8 +79,8 @@
       videoElement.addEventListener('loadedmetadata', () => {
         //console.log('Data loaded.');
         //videoElementの幅と高さを取得
-        videoWidth = videoElement.clientWidth;
-        videoHeight = videoElement.clientHeight;
+        const videoWidth = videoElement.clientWidth;
+        const videoHeight = videoElement.clientHeight;
 
           
         // キャプチャした画像の領域を指定
@@ -113,6 +112,9 @@
       ctx1.strokeStyle = "#FF0000"; // 赤色
       ctx1.beginPath();
       ctx1.strokeRect(stX, stY, ojW, ojH);
+
+      console.log("枠線のサイズ:", { width: ojW, height: ojH });
+      console.log("キャプチャ領域のサイズ:", { width: objectWidth, height: objectHeight });
     }
 
     

@@ -79,8 +79,9 @@
       videoElement.addEventListener('loadedmetadata', () => {
         //console.log('Data loaded.');
         //videoElementの幅と高さを取得
-        const videoWidth = window.innerWidth;
-        const videoHeight = window.innerHeight;
+        const videoWidth = videoElement.videoWidth;
+        const videoHeight = videoElement.videoHeight;
+
           
         // キャプチャした画像の領域を指定
         const objectWidth = 250;
@@ -118,8 +119,9 @@
     // キャプチャボタンのクリックイベント
     captureButton.addEventListener("click", () => {
       //console.log('Capture button clicked.');
-      const videoWidth = window.innerWidth;
-      const videoHeight = window.innerHeight;
+      const videoWidth = videoElement.videoWidth;
+      const videoHeight = videoElement.videoHeight;
+
         
       // キャプチャした画像の領域を指定
       const objectWidth = 250;
@@ -143,13 +145,9 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
       
-
-      const processedImage = document.getElementById("processed-image");
-      processedImage.onload = () => {
-        processedImage.style.display = "block";
-      };
+      console.log("commit_9")
       processedImage.src = capturedImage;
-    
+      processedImage.style.display = "block"; 
       
       // 画像を表示
       //processedImage.src = capturedImage;

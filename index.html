@@ -143,18 +143,13 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
       
-      // 画像を一旦非表示にする
-      processedImage.style.display = "none"; 
 
-      // 一時的に画像を読み込むために新しい Image オブジェクトを作成し、読み込み後に表示する
-      const tempImage = new Image();
-      tempImage.onload = () => {
-      // 画像読み込み後の処理
-      processedImage.src = capturedImage;
-      processedImage.style.display = "block"; 
+      const processedImage = document.getElementById("processed-image");
+      processedImage.onload = () => {
+        processedImage.style.display = "block";
       };
-      tempImage.src = capturedImage;
-      
+      processedImage.src = capturedImage;
+    
       
       // 画像を表示
       //processedImage.src = capturedImage;

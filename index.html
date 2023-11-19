@@ -84,8 +84,8 @@
 
           
         // キャプチャした画像の領域を指定
-        const objectWidth = 250;
-        const objectHeight = 250;
+        const objectWidth = 375;
+        const objectHeight = 375;
 
         // 切り取る領域の左上座標を計算
         const startX = (videoWidth - objectWidth) / 2;
@@ -131,6 +131,7 @@
       // 切り取る領域の左上座標を計算
       const startX = (videoWidth - objectWidth) / 2;
       const startY = (videoHeight - objectHeight) / 2;
+
       // キャンバスを作成し、映像を描画
       const canvas = document.createElement("canvas");
       canvas.width = objectWidth; // 切り取る領域の幅
@@ -146,7 +147,7 @@
       const capturedImage = canvas.toDataURL("image/jpeg");
       console.log({capturedImage})
       
-      console.log("commit_14")
+      console.log("commit_15")
       processedImage.src = capturedImage;
       processedImage.style.display = "block"; 
       

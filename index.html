@@ -34,7 +34,7 @@
     #capture-button {
       font-size: 20px;
       position: fixed;
-      bottom: 18px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       padding: 30px 50px;
@@ -100,6 +100,7 @@
         // 切り取る領域の左上座標を計算
         const startX = (videoWidth - objectWidth) / 2;
         const startY = (videoHeight - objectHeight) / 2;
+        // 枠線表示
         showCaptureArea(videoWidth, videoHeight, objectWidth , objectHeight, startX, startY);
       });
     })
@@ -166,7 +167,7 @@
       // mat形式の画像のsize
       console.log(mat.cols, mat.rows);
       // コミット数
-      console.log("commit_21")
+      console.log("commit_22")
     });
   </script>
 </body>

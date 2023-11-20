@@ -5,11 +5,13 @@
   <title>WebAR Image Capture</title>
   <script src="https://docs.opencv.org/4.5.4/opencv.js"></script>
   <style>
+    /* HTMLドキュメント全体 */
     body {
       margin: 0;
       overflow: hidden;
     }
 
+    /* videoの表示領域制御 */ 
     #ar-container {
       position: absolute;
       top: 0;
@@ -17,17 +19,20 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      /* 最後面 */
       z-index: -2;
     }
 
+    /* video要素自体 */
     #video-element {
       width: 100%;
       height: 100%;
       z-index: -1;
     }
-    
+
+    /* ボタン */
     #capture-button {
-      font-size: 18px;
+      font-size: 20px;
       position: fixed;
       bottom: 20px;
       left: 50%;
@@ -40,14 +45,16 @@
       z-index: 1;
     }
 
+    /* キャプチャした画像 */
     #processed-image {
       position: fixed;
-      bottom: 0;
+      bottom: 0.2%;
       left: 10%;
       transform: translateX(-50%);
       width: 100px;
       height: 100px;
       object-fit: cover; 
+      /* 最前面 */
       z-index: 2; 
       display: none; 
     }
@@ -71,6 +78,7 @@
   // カメラの映像取得
   navigator.mediaDevices.getUserMedia({ video:{ facingMode: { exact: "environment" } }})
     .then((stream) => {
+      // 読み込み開始
       console.log('navi loaded.');
       videoElement.srcObject = stream;
       videoElement.play();
@@ -78,6 +86,7 @@
     .then(() => {
       // 映像の再生が開始された後に showCaptureArea() を呼び出す
       videoElement.addEventListener('loadedmetadata', () => {
+        // 読み込み完了
         console.log('Data loaded.');
         //videoElementの幅と高さを取得
         const videoWidth = videoElement.clientWidth;
@@ -154,8 +163,10 @@
       // OpenCVのMat形式に変換
       const mat = cv.matFromImageData(capturedImageData);
 
+      // mat形式の画像のsize
       console.log(mat.cols, mat.rows);
-      console.log("commit_19")
+      // コミット数
+      console.log("commit_20")
     });
   </script>
 </body>
